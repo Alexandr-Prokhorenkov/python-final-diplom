@@ -60,7 +60,7 @@ if not SECRET_KEY:
 
 DEBUG = _env_bool('DEBUG', default=True)
 
-ALLOWED_HOSTS = _env_list('ALLOWED_HOSTS', default='localhost,127.0.0.1')
+ALLOWED_HOSTS = _env_list('ALLOWED_HOSTS', default='localhost,127.0.0.1,testserver')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -69,6 +69,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'django_rest_passwordreset',
     'backend.apps.BackendConfig',
 ]
 
@@ -121,6 +124,21 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Кастомный пользователь: задан до первой миграции.
+AUTH_USER_MODEL = 'backend.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 40,
+}
 
 # Email: console backend by default so letters print in the terminal.
 EMAIL_BACKEND = os.getenv(

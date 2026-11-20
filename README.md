@@ -1,5 +1,31 @@
 # Дипломный проект профессии «Python-разработчик: расширенный курс»
 
+## Локальный запуск
+
+Нужен Python 3.10 или новее.
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+```
+
+В `.env` задайте свой `SECRET_KEY`. Остальные значения можно оставить как в примере: SQLite и письма в консоль терминала.
+
+```bash
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
+
+Админка: http://127.0.0.1:8000/admin/  
+API (пока без эндпоинтов): http://127.0.0.1:8000/api/v1/
+
+Переменные окружения описаны в `.env.example`. Секреты в git не коммитятся.
+
+---
+
 ## Backend-приложение для автоматизации закупок
 
 ### Цель дипломного проекта
