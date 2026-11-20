@@ -1,0 +1,46 @@
+# Virtualenv
+venv/
+.venv/
+env/
+ENV/
+
+# Secrets and local config
+.env
+*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Django
+db.sqlite3
+*.log
+media/
+staticfiles/
+local_settings.py
+
+# Tests / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.mypy_cache/
+
+# Celery
+celerybeat-schedule
+celerybeat-schedule.db
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
