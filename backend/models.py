@@ -1,11 +1,24 @@
+import secrets
+
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import F, Sum
 
 
 class UserType(models.TextChoices):
     SHOP = 'shop', 'Магазин'
     BUYER = 'buyer', 'Покупатель'
+
+
+class OrderStatus(models.TextChoices):
+    BASKET = 'basket', 'Корзина'
+    NEW = 'new', 'Новый'
+    CONFIRMED = 'confirmed', 'Подтверждён'
+    ASSEMBLED = 'assembled', 'Собран'
+    SENT = 'sent', 'Отправлен'
+    DELIVERED = 'delivered', 'Доставлен'
+    CANCELED = 'canceled', 'Отменён'
 
 
 class UserManager(BaseUserManager):
@@ -73,3 +86,273 @@ class User(AbstractUser):
     def __str__(self):
         full_name = self.get_full_name().strip()
         return full_name or self.email
+
+
+class Shop(models.Model):
+    """Магазин поставщика. state=False — приём заказов выключен."""
+
+    name = models.CharField('Название', max_length=50)
+    url = models.URLField('Ссылка на прайс', blank=True, null=True)
+    user = models.OneToOneField(
+        User,
+        verbose_name='Владелец',
+        related_name='shop',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+    state = models.BooleanField('Принимает заказы', default=True)
+
+    class Meta:
+        verbose_name = 'Магазин'
+        verbose_name_plural = 'Магазины'
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+
+class Category(models.Model):
+    name = models.CharField('Название', max_length=40)
+    shops = models.ManyToManyField(
+        Shop,
+        verbose_name='Магазины',
+        related_name='categories',
+        blank=True,
+    )
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+
+class Product(models.Model):
+    """Товар в общем каталоге. Цена и остаток живут в ProductInfo по магазинам."""
+
+    name = models.CharField('Название', max_length=80)
+    category = models.ForeignKey(
+        Category,
+        verbose_name='Категория',
+        related_name='products',
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+
+class ProductInfo(models.Model):
+    """Предложение магазина: цена, остаток и внешний id из YAML-прайса."""
+
+    product = models.ForeignKey(
+        Product,
+        verbose_name='Товар',
+        related_name='product_infos',
+        on_delete=models.CASCADE,
+    )
+    shop = models.ForeignKey(
+        Shop,
+        verbose_name='Магазин',
+        related_name='product_infos',
+        on_delete=models.CASCADE,
+    )
+    external_id = models.PositiveIntegerField('Внешний ID')
+    model = models.CharField('Модель', max_length=80, blank=True)
+    quantity = models.PositiveIntegerField('Количество')
+    price = models.PositiveIntegerField('Цена')
+    price_rrc = models.PositiveIntegerField('Рекомендуемая розничная цена')
+
+    class Meta:
+        verbose_name = 'Предложение магазина'
+        verbose_name_plural = 'Предложения магазинов'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('product', 'shop', 'external_id'),
+                name='unique_product_info',
+            ),
+        ]
+
+    def __str__(self):
+        return f'{self.product} / {self.shop} ({self.price})'
+
+
+class Parameter(models.Model):
+    name = models.CharField('Название', max_length=40)
+
+    class Meta:
+        verbose_name = 'Характеристика'
+        verbose_name_plural = 'Характеристики'
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+
+class ProductParameter(models.Model):
+    product_info = models.ForeignKey(
+        ProductInfo,
+        verbose_name='Предложение',
+        related_name='product_parameters',
+        on_delete=models.CASCADE,
+    )
+    parameter = models.ForeignKey(
+        Parameter,
+        verbose_name='Характеристика',
+        related_name='product_parameters',
+        on_delete=models.CASCADE,
+    )
+    value = models.CharField('Значение', max_length=100)
+
+    class Meta:
+        verbose_name = 'Значение характеристики'
+        verbose_name_plural = 'Значения характеристик'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('product_info', 'parameter'),
+                name='unique_product_parameter',
+            ),
+        ]
+
+    def __str__(self):
+        return f'{self.parameter}: {self.value}'
+
+
+class Contact(models.Model):
+    """Адрес доставки покупателя."""
+
+    user = models.ForeignKey(
+        User,
+        verbose_name='Пользователь',
+        related_name='contacts',
+        on_delete=models.CASCADE,
+    )
+    city = models.CharField('Город', max_length=50)
+    street = models.CharField('Улица', max_length=100)
+    house = models.CharField('Дом', max_length=15, blank=True)
+    structure = models.CharField('Корпус', max_length=15, blank=True)
+    building = models.CharField('Строение', max_length=15, blank=True)
+    apartment = models.CharField('Квартира', max_length=15, blank=True)
+    phone = models.CharField('Телефон', max_length=20)
+
+    class Meta:
+        verbose_name = 'Контакт'
+        verbose_name_plural = 'Контакты'
+
+    def __str__(self):
+        parts = [self.city, self.street, self.house]
+        return ' '.join(part for part in parts if part)
+
+
+class Order(models.Model):
+    """Корзина — заказ со статусом basket. После подтверждения статус new."""
+
+    user = models.ForeignKey(
+        User,
+        verbose_name='Пользователь',
+        related_name='orders',
+        on_delete=models.CASCADE,
+    )
+    dt = models.DateTimeField('Создан', auto_now_add=True)
+    state = models.CharField(
+        'Статус',
+        max_length=15,
+        choices=OrderStatus.choices,
+        default=OrderStatus.BASKET,
+    )
+    contact = models.ForeignKey(
+        Contact,
+        verbose_name='Адрес доставки',
+        related_name='orders',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
+        ordering = ('-dt',)
+
+    def __str__(self):
+        return f'Заказ #{self.pk} ({self.get_state_display()})'
+
+    @property
+    def total_sum(self):
+        total = self.ordered_items.aggregate(
+            total=Sum(F('price') * F('quantity')),
+        )['total']
+        return total or 0
+
+
+class OrderItem(models.Model):
+    """Позиция заказа. price копируется с ProductInfo, чтобы прайс не переписывал историю."""
+
+    order = models.ForeignKey(
+        Order,
+        verbose_name='Заказ',
+        related_name='ordered_items',
+        on_delete=models.CASCADE,
+    )
+    product_info = models.ForeignKey(
+        ProductInfo,
+        verbose_name='Предложение',
+        related_name='ordered_items',
+        on_delete=models.CASCADE,
+    )
+    quantity = models.PositiveIntegerField('Количество')
+    price = models.PositiveIntegerField('Цена на момент заказа')
+
+    class Meta:
+        verbose_name = 'Позиция заказа'
+        verbose_name_plural = 'Позиции заказа'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('order', 'product_info'),
+                name='unique_order_item',
+            ),
+        ]
+
+    def __str__(self):
+        return f'{self.product_info} × {self.quantity}'
+
+    @property
+    def cost(self):
+        return self.price * self.quantity
+
+
+class ConfirmEmailToken(models.Model):
+    """Токен подтверждения email при регистрации."""
+
+    user = models.ForeignKey(
+        User,
+        verbose_name='Пользователь',
+        related_name='confirm_email_tokens',
+        on_delete=models.CASCADE,
+    )
+    created_at = models.DateTimeField('Создан', auto_now_add=True)
+    key = models.CharField('Ключ', max_length=64, unique=True, db_index=True)
+
+    class Meta:
+        verbose_name = 'Токен подтверждения email'
+        verbose_name_plural = 'Токены подтверждения email'
+
+    def __str__(self):
+        return f'Токен для {self.user}'
+
+    @staticmethod
+    def generate_key():
+        return secrets.token_hex(32)
+
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = self.generate_key()
+        super().save(*args, **kwargs)
