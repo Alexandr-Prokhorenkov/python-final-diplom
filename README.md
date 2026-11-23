@@ -20,7 +20,8 @@ python manage.py runserver
 ```
 
 Админка: http://127.0.0.1:8000/admin/  
-API (пока без эндпоинтов): http://127.0.0.1:8000/api/v1/
+Swagger: http://127.0.0.1:8000/api/docs/  
+API: http://127.0.0.1:8000/api/v1/
 
 Переменные окружения описаны в `.env.example`. Секреты в git не коммитятся.
 
