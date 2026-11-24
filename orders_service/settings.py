@@ -6,6 +6,7 @@ See `.env.example` for the list of variables.
 """
 
 import os
+import sys
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
@@ -163,11 +164,16 @@ EMAIL_USE_TLS = _env_bool('EMAIL_USE_TLS', default=False)
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER or 'webmaster@localhost'
 ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@example.com')
 
-# Celery (worker and broker are wired on stage 7).
+# Celery: ALWAYS_EAGER=True — без Redis (задачи выполняются в процессе Django).
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://127.0.0.1:6379/0')
 CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://127.0.0.1:6379/1')
-CELERY_TASK_ALWAYS_EAGER = _env_bool('CELERY_TASK_ALWAYS_EAGER', default=False)
+CELERY_TASK_ALWAYS_EAGER = _env_bool('CELERY_TASK_ALWAYS_EAGER', default=True)
+CELERY_TASK_EAGER_PROPAGATES = True
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+
+if 'test' in sys.argv or os.getenv('PYTEST_CURRENT_TEST'):
+    CELERY_TASK_ALWAYS_EAGER = True
+    CELERY_TASK_EAGER_PROPAGATES = True

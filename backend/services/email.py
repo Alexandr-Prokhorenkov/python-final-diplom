@@ -1,16 +1,9 @@
-from django.conf import settings
-from django.core.mail import send_mail
+from backend.tasks import send_email
 
 
 def send_notification(subject: str, message: str, recipients: list[str]) -> None:
-    """Синхронная отправка письма. На этапе 7 уйдёт в Celery."""
+    """Ставит письмо в очередь Celery (или выполняет сразу при ALWAYS_EAGER)."""
     to = [email for email in recipients if email]
     if not to:
         return
-    send_mail(
-        subject=subject,
-        message=message,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=to,
-        fail_silently=False,
-    )
+    send_email.delay(subject, message, to)

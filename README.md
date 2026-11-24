@@ -39,6 +39,21 @@ python manage.py changepassword mvideo@example.com
 python manage.py test backend.tests
 ```
 
+### Celery: письма и импорт
+
+Два режима (переменная `CELERY_TASK_ALWAYS_EAGER` в `.env`):
+
+**Без Redis (по умолчанию, для сдачи).** `CELERY_TASK_ALWAYS_EAGER=True` — `send_email` и `do_import` выполняются сразу в процессе Django, worker не нужен.
+
+**С Redis и воркером.** В `.env` поставьте `CELERY_TASK_ALWAYS_EAGER=False`, затем:
+
+```bash
+docker compose up -d redis
+celery -A orders_service worker -l info
+```
+
+В админке импорт ставит задачу `do_import`: кнопка в карточке магазина или действие «Импортировать прайс» в списке (нужен URL прайса у магазина). Письма регистрации, заказа и смены статуса идут через `send_email.delay()`.
+
 Переменные окружения описаны в `.env.example`. Секреты в git не коммитятся.
 
 ### Сквозной сценарий API

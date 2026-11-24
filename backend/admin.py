@@ -1,7 +1,11 @@
+from pathlib import Path
+
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import path, reverse
+
+from django.conf import settings as django_settings
 
 from backend.forms import PriceImportForm
 from backend.models import (
@@ -19,12 +23,9 @@ from backend.models import (
     User,
     UserType,
 )
-from backend.services.importer import (
-    PriceListError,
-    import_price_list_from_url,
-    import_price_list_from_yaml,
-)
+from backend.services.importer import PriceListError
 from backend.services.orders import notify_order_status_changed
+from backend.tasks import do_import
 
 admin.site.site_header = 'Админка склада'
 admin.site.site_title = 'Заказы'
@@ -99,6 +100,7 @@ class ShopAdmin(admin.ModelAdmin):
     list_editable = ('state',)
     search_fields = ('name', 'user__email')
     autocomplete_fields = ('user',)
+    actions = ('queue_price_import',)
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -123,15 +125,22 @@ class ShopAdmin(admin.ModelAdmin):
             form = PriceImportForm(request.POST, request.FILES)
             if form.is_valid():
                 try:
-                    stats = self._run_import(shop, form.cleaned_data)
+                    result = self._queue_import(shop, form.cleaned_data)
                 except PriceListError as exc:
                     messages.error(request, str(exc))
                 else:
-                    messages.success(
-                        request,
-                        'Импорт «{shop}»: создано {created}, обновлено {updated}, '
-                        'удалено {deleted}, обнулено {deactivated}.'.format(**stats),
-                    )
+                    if result is None:
+                        messages.success(
+                            request,
+                            'Импорт поставлен в очередь Celery. '
+                            'Запустите: celery -A orders_service worker -l info',
+                        )
+                    else:
+                        messages.success(
+                            request,
+                            'Импорт «{shop}»: создано {created}, обновлено {updated}, '
+                            'удалено {deleted}, обнулено {deactivated}.'.format(**result),
+                        )
                     return redirect(
                         reverse('admin:backend_shop_change', args=[shop.pk]),
                     )
@@ -149,14 +158,45 @@ class ShopAdmin(admin.ModelAdmin):
             },
         )
 
-    def _run_import(self, shop: Shop, cleaned_data: dict) -> dict:
-        if not shop.user:
+    @admin.action(description='Импортировать прайс')
+    def queue_price_import(self, request, queryset):
+        queued = 0
+        for shop in queryset:
+            if not shop.user_id:
+                messages.warning(request, f'«{shop}»: нет владельца, пропуск.')
+                continue
+            if not shop.url:
+                messages.warning(
+                    request,
+                    f'«{shop}»: нет URL. Откройте карточку и загрузите YAML-файл.',
+                )
+                continue
+            self._delay_import(user_id=shop.user_id, url=shop.url)
+            queued += 1
+        if queued:
+            messages.success(request, f'В очередь импорта поставлено магазинов: {queued}.')
+
+    def _queue_import(self, shop: Shop, cleaned_data: dict) -> dict | None:
+        if not shop.user_id:
             raise PriceListError('У магазина нет владельца — назначьте пользователя type=shop.')
         yaml_file = cleaned_data.get('yaml_file')
         yaml_url = cleaned_data.get('yaml_url')
         if yaml_file:
-            return import_price_list_from_yaml(user=shop.user, content=yaml_file.read())
-        return import_price_list_from_url(user=shop.user, url=yaml_url)
+            imports_dir = django_settings.BASE_DIR / 'media' / 'imports'
+            imports_dir.mkdir(parents=True, exist_ok=True)
+            filename = Path(yaml_file.name).name
+            path = imports_dir / f'{shop.pk}_{filename}'
+            path.write_bytes(yaml_file.read())
+            async_result = self._delay_import(user_id=shop.user_id, path=str(path))
+        else:
+            async_result = self._delay_import(user_id=shop.user_id, url=yaml_url)
+        if django_settings.CELERY_TASK_ALWAYS_EAGER:
+            return async_result.get()
+        return None
+
+    @staticmethod
+    def _delay_import(*, user_id: int, url: str | None = None, path: str | None = None):
+        return do_import.delay(user_id, url=url, path=path)
 
 
 class ProductInline(admin.TabularInline):
