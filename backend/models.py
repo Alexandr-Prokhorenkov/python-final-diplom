@@ -324,6 +324,12 @@ class OrderItem(models.Model):
     def __str__(self):
         return f'{self.product_info} × {self.quantity}'
 
+    def save(self, *args, **kwargs):
+        # В админке price readonly и не приходит в POST — берём цену предложения.
+        if self.product_info_id and self.price in (None, ''):
+            self.price = self.product_info.price
+        super().save(*args, **kwargs)
+
     @property
     def cost(self):
         return self.price * self.quantity

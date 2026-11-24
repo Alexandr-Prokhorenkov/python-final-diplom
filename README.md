@@ -19,7 +19,8 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Админка: http://127.0.0.1:8000/admin/  
+Админка склада: http://127.0.0.1:8000/admin/  
+В карточке магазина есть кнопка «Импортировать прайс» (YAML-файл или URL). Смена статуса заказа в админке отправляет то же письмо, что и API.  
 Swagger: http://127.0.0.1:8000/api/docs/  
 API: http://127.0.0.1:8000/api/v1/
 

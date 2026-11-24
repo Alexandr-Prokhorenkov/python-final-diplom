@@ -105,15 +105,22 @@ def update_order_status(user, order_id, state: str) -> Order:
 
     order.state = state
     order.save(update_fields=['state'])
+    notify_order_status_changed(order, previous)
+    return order
+
+
+def notify_order_status_changed(order: Order, previous_state: str) -> None:
+    """Письмо клиенту при смене статуса — одно и то же для API и админки."""
+    if previous_state == order.state:
+        return
     send_notification(
         subject=f'Статус заказа №{order.id} изменён',
         message=(
-            f'Заказ №{order.id}: статус «{OrderStatus(previous).label}» '
+            f'Заказ №{order.id}: статус «{OrderStatus(previous_state).label}» '
             f'изменён на «{order.get_state_display()}».'
         ),
         recipients=[order.user.email],
     )
-    return order
 
 
 def list_partner_orders(user):
