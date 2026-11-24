@@ -23,7 +23,67 @@ python manage.py runserver
 Swagger: http://127.0.0.1:8000/api/docs/  
 API: http://127.0.0.1:8000/api/v1/
 
+Импорт прайсов двух магазинов (нужно для корзины с разными поставщиками):
+
+```bash
+python manage.py import_shop data/shop1.yaml --email shop@example.com
+python manage.py changepassword shop@example.com
+python manage.py import_shop data/shop2.yaml --email mvideo@example.com
+python manage.py changepassword mvideo@example.com
+```
+
+Автотесты сквозного сценария:
+
+```bash
+python manage.py test backend.tests
+```
+
 Переменные окружения описаны в `.env.example`. Секреты в git не коммитятся.
+
+### Сквозной сценарий API
+
+Письма на этапе разработки печатаются в терминале `runserver` (токен подтверждения, заказ, накладная).
+
+```bash
+# 1. Регистрация покупателя
+curl -s -X POST http://127.0.0.1:8000/api/v1/user/register \
+  -H 'Content-Type: application/json' \
+  -d '{"first_name":"Иван","last_name":"Иванов","email":"ivan@test.local","password":"Str0ng-Passw0rd!"}'
+
+# 2. Confirm (token из письма в терминале) и login
+curl -s -X POST http://127.0.0.1:8000/api/v1/user/register/confirm \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"ivan@test.local","token":"ВСТАВЬТЕ_ТОКЕН"}'
+
+TOKEN=$(curl -s -X POST http://127.0.0.1:8000/api/v1/user/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"ivan@test.local","password":"Str0ng-Passw0rd!"}' | python3 -c "import sys,json; print(json.load(sys.stdin)['Token'])")
+
+# 3. Каталог и фильтры
+curl -s "http://127.0.0.1:8000/api/v1/products"
+curl -s "http://127.0.0.1:8000/api/v1/products?shop_id=1"
+curl -s "http://127.0.0.1:8000/api/v1/products?category_id=224"
+
+# 4. Контакт, корзина из двух магазинов, заказ
+curl -s -X POST http://127.0.0.1:8000/api/v1/user/contact \
+  -H "Authorization: Token $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"city":"Москва","street":"Тверская","house":"1","phone":"+79000000000"}'
+
+curl -s -X POST http://127.0.0.1:8000/api/v1/basket \
+  -H "Authorization: Token $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"product_info":1,"quantity":1}'
+curl -s -X POST http://127.0.0.1:8000/api/v1/basket \
+  -H "Authorization: Token $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"product_info":15,"quantity":1}'
+
+curl -s http://127.0.0.1:8000/api/v1/basket -H "Authorization: Token $TOKEN"
+curl -s -X POST http://127.0.0.1:8000/api/v1/order \
+  -H "Authorization: Token $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"id":1,"contact":1}'
+curl -s http://127.0.0.1:8000/api/v1/order -H "Authorization: Token $TOKEN"
+```
+
+`product_info`, `id` корзины и `contact` подставьте из ответов предыдущих запросов. Статус заказа меняет поставщик: `PATCH /api/v1/order/<id>/status` с телом `{"state":"confirmed"}`. Выключить витрину: `POST /api/v1/partner/state` `{"state":false}`.
 
 ---
 

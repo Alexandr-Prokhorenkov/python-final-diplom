@@ -1,0 +1,38 @@
+shop: М.Видео
+categories:
+  - id: 224
+    name: Смартфоны
+  - id: 5
+    name: Телевизоры
+
+goods:
+  - id: 9000001
+    category: 224
+    model: samsung/galaxy-s24
+    name: Смартфон Samsung Galaxy S24 256GB (серый)
+    price: 72000
+    price_rrc: 79990
+    quantity: 8
+    parameters:
+      "Диагональ (дюйм)": 6.2
+      "Цвет": серый
+  - id: 9000002
+    category: 224
+    model: xiaomi/redmi-note-13
+    name: Смартфон Xiaomi Redmi Note 13 128GB (чёрный)
+    price: 18000
+    price_rrc: 19990
+    quantity: 20
+    parameters:
+      "Диагональ (дюйм)": 6.67
+      "Цвет": чёрный
+  - id: 9000003
+    category: 5
+    model: samsung/crystal-au8000
+    name: Samsung Crystal UHD AU8000 55" 4K Smart TV
+    price: 45000
+    price_rrc: 49990
+    quantity: 6
+    parameters:
+      "Screen Size (inches)": 55
+      "Smart TV": true
