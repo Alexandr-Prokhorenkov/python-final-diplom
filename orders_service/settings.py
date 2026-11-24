@@ -62,6 +62,10 @@ if not SECRET_KEY:
 DEBUG = _env_bool('DEBUG', default=True)
 
 ALLOWED_HOSTS = _env_list('ALLOWED_HOSTS', default='localhost,127.0.0.1,testserver')
+CSRF_TRUSTED_ORIGINS = _env_list(
+    'CSRF_TRUSTED_ORIGINS',
+    default='http://localhost:8000,http://127.0.0.1:8000',
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -122,8 +126,10 @@ TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

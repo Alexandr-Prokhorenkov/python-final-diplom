@@ -1,3 +1,5 @@
+import yaml
+from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -58,3 +60,24 @@ class PartnerOrders(APIView):
     def get(self, request, *args, **kwargs):
         queryset = orders.list_partner_orders(request.user)
         return Response(OrderSerializer(queryset, many=True).data)
+
+
+class PartnerExport(APIView):
+    """Выгрузка каталога магазина в YAML того же формата, что импорт."""
+
+    permission_classes = (IsAuthenticated, IsShopUser)
+
+    def get(self, request, *args, **kwargs):
+        try:
+            payload = partners.export_price_list(request.user)
+        except ServiceError as exc:
+            return handle_service_error(exc)
+        body = yaml.safe_dump(
+            payload,
+            allow_unicode=True,
+            sort_keys=False,
+            default_flow_style=False,
+        )
+        response = HttpResponse(body, content_type='application/x-yaml; charset=utf-8')
+        response['Content-Disposition'] = 'attachment; filename="price.yaml"'
+        return response

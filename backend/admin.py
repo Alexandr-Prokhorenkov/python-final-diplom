@@ -182,7 +182,7 @@ class ShopAdmin(admin.ModelAdmin):
         yaml_file = cleaned_data.get('yaml_file')
         yaml_url = cleaned_data.get('yaml_url')
         if yaml_file:
-            imports_dir = django_settings.BASE_DIR / 'media' / 'imports'
+            imports_dir = django_settings.MEDIA_ROOT / 'imports'
             imports_dir.mkdir(parents=True, exist_ok=True)
             filename = Path(yaml_file.name).name
             path = imports_dir / f'{shop.pk}_{filename}'

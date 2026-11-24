@@ -39,6 +39,34 @@ python manage.py changepassword mvideo@example.com
 python manage.py test backend.tests
 ```
 
+### Docker Compose
+
+Сервисы: `web` (gunicorn, migrate при старте), `db` (Postgres), `redis`, `worker` (Celery).  
+Пароли и `SECRET_KEY` — в `.env`. Данные Postgres хранятся в volume `postgres_data`. Миграции выполняются при старте контейнера, не на этапе сборки образа.
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+После запуска:
+
+* API: http://127.0.0.1:8000/api/v1/
+* Swagger: http://127.0.0.1:8000/api/docs/
+* Админка: http://127.0.0.1:8000/admin/
+
+Суперпользователь и импорт прайса внутри контейнера:
+
+```bash
+docker compose exec web python manage.py createsuperuser
+docker compose exec web python manage.py import_shop data/shop1.yaml --email shop@example.com
+docker compose exec web python manage.py changepassword shop@example.com
+```
+
+Письма и логи импорта смотрите в `docker compose logs -f web worker`. Остановить стек: `docker compose down`. Данные Postgres в volume сохраняются.
+
+Локальный `venv` в образ не попадает (см. `.dockerignore`).
+
 ### Celery: письма и импорт
 
 Два режима (переменная `CELERY_TASK_ALWAYS_EAGER` в `.env`):
@@ -99,7 +127,7 @@ curl -s -X POST http://127.0.0.1:8000/api/v1/order \
 curl -s http://127.0.0.1:8000/api/v1/order -H "Authorization: Token $TOKEN"
 ```
 
-`product_info`, `id` корзины и `contact` подставьте из ответов предыдущих запросов. Статус заказа меняет поставщик: `PATCH /api/v1/order/<id>/status` с телом `{"state":"confirmed"}`. Выключить витрину: `POST /api/v1/partner/state` `{"state":false}`.
+`product_info`, `id` корзины и `contact` подставьте из ответов предыдущих запросов. Статус заказа меняет поставщик: `PATCH /api/v1/order/<id>/status` с телом `{"state":"confirmed"}`. Выключить витрину: `POST /api/v1/partner/state` `{"state":false}`. Экспорт прайса магазина (YAML того же формата, что импорт): `GET /api/v1/partner/export` с токеном пользователя типа `shop`.
 
 ---
 

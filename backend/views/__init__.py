@@ -13,7 +13,7 @@ from backend.views.catalog import (
     ShopView,
 )
 from backend.views.orders import OrderDetailView, OrderStatusView, OrderView
-from backend.views.partners import PartnerOrders, PartnerState, PartnerUpdate
+from backend.views.partners import PartnerExport, PartnerOrders, PartnerState, PartnerUpdate
 
 __all__ = [
     'AccountDetails',
@@ -25,6 +25,7 @@ __all__ = [
     'OrderDetailView',
     'OrderStatusView',
     'OrderView',
+    'PartnerExport',
     'PartnerOrders',
     'PartnerState',
     'PartnerUpdate',
