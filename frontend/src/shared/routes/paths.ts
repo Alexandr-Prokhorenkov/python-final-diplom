@@ -1,0 +1,17 @@
+export const paths = {
+  catalog: '/',
+  product: (id: number | string) => `/products/${id}`,
+  login: '/login',
+  register: '/register',
+  registerConfirm: '/register/confirm',
+  passwordReset: '/password-reset',
+  basket: '/basket',
+  checkout: '/checkout',
+  orders: '/orders',
+  order: (id: number | string) => `/orders/${id}`,
+  contacts: '/contacts',
+  profile: '/profile',
+  partner: '/partner',
+  partnerOrders: '/partner/orders',
+  forbidden: '/403',
+} as const;

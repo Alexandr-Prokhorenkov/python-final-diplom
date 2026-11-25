@@ -1,0 +1,81 @@
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: Inter, "Segoe UI", Roboto, sans-serif;
+  background: var(--p-surface-50, #f8fafc);
+  color: var(--p-text-color, #1e293b);
+}
+
+a {
+  color: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-shell__body {
+  flex: 1;
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 1.25rem 0 3rem;
+}
+
+.app-auth {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.app-auth__card {
+  width: min(420px, 100%);
+}
+
+.app-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.app-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.app-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.app-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.app-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.app-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}

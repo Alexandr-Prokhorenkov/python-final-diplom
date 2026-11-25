@@ -22,7 +22,8 @@ python manage.py runserver
 Админка склада: http://127.0.0.1:8000/admin/  
 В карточке магазина есть кнопка «Импортировать прайс» (YAML-файл или URL). Смена статуса заказа в админке отправляет то же письмо, что и API.  
 Swagger: http://127.0.0.1:8000/api/docs/  
-API: http://127.0.0.1:8000/api/v1/
+API: http://127.0.0.1:8000/api/v1/  
+SPA (Angular 20): каталог `frontend/`, запуск `cd frontend && npm start` → http://127.0.0.1:4200/ (прокси на API). Подробности: [frontend.md](frontend.md), [frontend/README.md](frontend/README.md).
 
 Импорт прайсов двух магазинов (нужно для корзины с разными поставщиками):
 
