@@ -22,12 +22,5 @@
       </ng-template>
     </p-table>
   }
-  <p-dialog
-    [(visible)]="dialog"
-    [header]="editing() ? 'Изменить адрес' : 'Новый адрес'"
-    [modal]="true"
-    [style]="{ width: '28rem' }"
-  >
-    <feature-contact-form [contact]="editing()" (saved)="onSaved()" />
-  </p-dialog>
+  <feature-contact-form [showTrigger]="false" (saved)="onSaved()" />
 </section>

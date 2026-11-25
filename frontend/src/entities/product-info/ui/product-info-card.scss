@@ -5,11 +5,39 @@
 }
 
 .title-link {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
   text-decoration: none;
+  line-height: 1.4;
+  min-height: 2.8em;
+}
+
+:host ::ng-deep .p-card-title {
+  min-width: 0;
+  min-height: 2.8em;
+  white-space: normal;
+  line-height: 1.4;
 }
 
 .body {
   min-width: 0;
+}
+
+.model {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+  min-height: 2.8em;
 }
 
 :host ::ng-deep {

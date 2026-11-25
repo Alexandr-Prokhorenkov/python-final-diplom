@@ -1,13 +1,32 @@
-<form class="app-form" (ngSubmit)="submit()">
-  @if (error()) {
-    <p-message severity="error" [text]="error()!" />
-  }
-  <label>Город <input pInputText name="city" [(ngModel)]="city" required /></label>
-  <label>Улица <input pInputText name="street" [(ngModel)]="street" required /></label>
-  <label>Дом <input pInputText name="house" [(ngModel)]="house" /></label>
-  <label>Корпус <input pInputText name="structure" [(ngModel)]="structure" /></label>
-  <label>Строение <input pInputText name="building" [(ngModel)]="building" /></label>
-  <label>Квартира <input pInputText name="apartment" [(ngModel)]="apartment" /></label>
-  <label>Телефон <input pInputText name="phone" [(ngModel)]="phone" required /></label>
-  <p-button type="submit" [label]="contact() ? 'Сохранить' : 'Добавить адрес'" [loading]="loading()" />
-</form>
+@if (showTrigger()) {
+  <p-button
+    type="button"
+    [label]="contact() ? 'Сохранить' : 'Добавить адрес'"
+    icon="pi pi-plus"
+    (onClick)="open()"
+  />
+}
+<p-dialog
+  [(visible)]="dialog"
+  [header]="isEdit ? 'Изменить адрес' : 'Новый адрес'"
+  [modal]="true"
+  [style]="{ width: '28rem' }"
+>
+  <form class="app-form" (ngSubmit)="submit()">
+    @if (error()) {
+      <p-message severity="error" [text]="error()!" />
+    }
+    <label>Город <input pInputText name="city" [(ngModel)]="city" required /></label>
+    <label>Улица <input pInputText name="street" [(ngModel)]="street" required /></label>
+    <label>Дом <input pInputText name="house" [(ngModel)]="house" /></label>
+    <label>Корпус <input pInputText name="structure" [(ngModel)]="structure" /></label>
+    <label>Строение <input pInputText name="building" [(ngModel)]="building" /></label>
+    <label>Квартира <input pInputText name="apartment" [(ngModel)]="apartment" /></label>
+    <label>Телефон <input pInputText name="phone" [(ngModel)]="phone" required /></label>
+    <p-button
+      type="submit"
+      [label]="isEdit ? 'Сохранить' : 'Добавить адрес'"
+      [loading]="loading()"
+    />
+  </form>
+</p-dialog>

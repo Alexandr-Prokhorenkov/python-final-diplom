@@ -1,4 +1,5 @@
 import secrets
+from typing import TYPE_CHECKING, cast
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
@@ -69,7 +70,7 @@ class User(AbstractUser):
     )
     is_active = models.BooleanField(
         'Активен',
-        default=False,
+        default=False,  # pyright: ignore[reportArgumentType]
         help_text='Неактивный пользователь не может войти, пока не подтвердит email.',
     )
 
@@ -78,14 +79,14 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    class Meta:
+    class Meta(AbstractUser.Meta):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
         ordering = ('email',)
 
     def __str__(self):
         full_name = self.get_full_name().strip()
-        return full_name or self.email
+        return full_name or cast(str, self.email)
 
 
 class Shop(models.Model):
@@ -101,7 +102,10 @@ class Shop(models.Model):
         blank=True,
         null=True,
     )
-    state = models.BooleanField('Принимает заказы', default=True)
+    state = models.BooleanField(
+        'Принимает заказы',
+        default=True,  # pyright: ignore[reportArgumentType]
+    )
 
     class Meta:
         verbose_name = 'Магазин'
@@ -109,7 +113,7 @@ class Shop(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        return self.name
+        return cast(str, self.name)
 
 
 class Category(models.Model):
@@ -127,7 +131,7 @@ class Category(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        return self.name
+        return cast(str, self.name)
 
 
 class Product(models.Model):
@@ -147,7 +151,7 @@ class Product(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        return self.name
+        return cast(str, self.name)
 
 
 class ProductInfo(models.Model):
@@ -194,7 +198,7 @@ class Parameter(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        return self.name
+        return cast(str, self.name)
 
 
 class ProductParameter(models.Model):
@@ -248,7 +252,7 @@ class Contact(models.Model):
         verbose_name_plural = 'Контакты'
 
     def __str__(self):
-        parts = [self.city, self.street, self.house]
+        parts = [cast(str, self.city), cast(str, self.street), cast(str, self.house)]
         return ' '.join(part for part in parts if part)
 
 
@@ -276,6 +280,8 @@ class Order(models.Model):
         blank=True,
         null=True,
     )
+    if TYPE_CHECKING:
+        ordered_items: models.QuerySet['OrderItem']
 
     class Meta:
         verbose_name = 'Заказ'
@@ -283,7 +289,8 @@ class Order(models.Model):
         ordering = ('-dt',)
 
     def __str__(self):
-        return f'Заказ #{self.pk} ({self.get_state_display()})'
+        state = OrderStatus(cast(str, self.state))
+        return f'Заказ #{self.pk} ({state.label})'
 
     @property
     def total_sum(self):
@@ -326,13 +333,14 @@ class OrderItem(models.Model):
 
     def save(self, *args, **kwargs):
         # В админке price readonly и не приходит в POST — берём цену предложения.
-        if self.product_info_id and self.price in (None, ''):
-            self.price = self.product_info.price
+        offer = cast(ProductInfo | None, self.product_info)
+        if self.price in (None, '') and offer is not None:
+            self.price = cast(int, offer.price)
         super().save(*args, **kwargs)
 
     @property
-    def cost(self):
-        return self.price * self.quantity
+    def cost(self) -> int:
+        return cast(int, self.price) * cast(int, self.quantity)
 
 
 class ConfirmEmailToken(models.Model):

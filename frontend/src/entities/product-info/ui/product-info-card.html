@@ -1,15 +1,21 @@
 <p-card>
   <ng-template #title>
-    <a class="title-link" [routerLink]="paths.product(item().id)">
+    <a
+      class="title-link"
+      [routerLink]="paths.product(item().id)"
+      [attr.title]="item().product.name"
+    >
       {{ item().product.name }}
     </a>
   </ng-template>
   <ng-template #subtitle>{{ item().product.category }}</ng-template>
   <div class="app-stack body">
     <p-tag [value]="item().shop.name" />
-    @if (item().model) {
-      <div>Модель: {{ item().model }}</div>
-    }
+    <div class="model" [attr.title]="item().model || null">
+      @if (item().model) {
+        Модель: {{ item().model }}
+      }
+    </div>
     <strong>{{ money(item().price) }}</strong>
     <div>В наличии: {{ item().quantity }}</div>
     <ng-content />

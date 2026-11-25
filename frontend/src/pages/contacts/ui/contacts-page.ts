@@ -1,7 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, viewChild } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
-import { Dialog } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { firstValueFrom } from 'rxjs';
 
@@ -11,7 +10,7 @@ import { EmptyState, PageHeader } from '@shared/ui';
 
 @Component({
   selector: 'page-contacts',
-  imports: [PageHeader, TableModule, Button, Dialog, ContactForm, EmptyState],
+  imports: [PageHeader, TableModule, Button, ContactForm, EmptyState],
   templateUrl: './contacts-page.html',
   styleUrl: './contacts-page.scss',
 })
@@ -19,10 +18,9 @@ export class ContactsPage {
   private readonly api = inject(ContactApi);
   private readonly mutate = inject(SaveContactApi);
   private readonly confirmations = inject(ConfirmationService);
+  private readonly form = viewChild.required(ContactForm);
 
   readonly contacts = signal<Contact[]>([]);
-  readonly editing = signal<Contact | null>(null);
-  dialog = false;
   readonly format = formatContact;
 
   constructor() {
@@ -30,12 +28,10 @@ export class ContactsPage {
   }
 
   open(contact: Contact | null): void {
-    this.editing.set(contact);
-    this.dialog = true;
+    this.form().open(contact);
   }
 
   async onSaved(): Promise<void> {
-    this.dialog = false;
     await this.reload();
   }
 
