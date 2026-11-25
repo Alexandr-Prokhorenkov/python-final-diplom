@@ -10,42 +10,8 @@ import { ProductInfo } from '../model/types';
 @Component({
   selector: 'entity-product-info-details',
   imports: [Panel, TableModule, Tag],
-  template: `
-    <p-panel [header]="item().product.name">
-      <div class="app-stack">
-        <div class="app-row">
-          <p-tag [value]="item().shop.name" />
-          <span>{{ item().product.category }}</span>
-        </div>
-        @if (item().model) {
-          <div>Модель: {{ item().model }}</div>
-        }
-        <div>
-          Цена: <strong>{{ money(item().price) }}</strong>
-          @if (item().price_rrc) {
-            <span> · РРЦ {{ money(item().price_rrc) }}</span>
-          }
-        </div>
-        <div>В наличии: {{ item().quantity }}</div>
-        @if (item().product_parameters.length) {
-          <p-table [value]="item().product_parameters" [tableStyle]="{ 'min-width': '100%' }">
-            <ng-template #header>
-              <tr>
-                <th>Характеристика</th>
-                <th>Значение</th>
-              </tr>
-            </ng-template>
-            <ng-template #body let-row>
-              <tr>
-                <td>{{ row.parameter }}</td>
-                <td>{{ row.value }}</td>
-              </tr>
-            </ng-template>
-          </p-table>
-        }
-      </div>
-    </p-panel>
-  `,
+  templateUrl: './product-info-details.html',
+  styleUrl: './product-info-details.scss',
 })
 export class ProductInfoDetails {
   readonly item = input.required<ProductInfo>();

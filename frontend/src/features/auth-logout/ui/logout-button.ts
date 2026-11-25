@@ -9,7 +9,8 @@ import { paths } from '@shared/routes';
 @Component({
   selector: 'feature-logout-button',
   imports: [Button],
-  template: `<p-button label="Выход" severity="secondary" [text]="true" (onClick)="logout()" />`,
+  templateUrl: './logout-button.html',
+  styleUrl: './logout-button.scss',
 })
 export class LogoutButton {
   private readonly session = inject(SessionStore);

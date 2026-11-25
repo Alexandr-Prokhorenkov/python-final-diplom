@@ -8,12 +8,8 @@ import { BasketPanelWidget } from '@widgets/basket-panel';
 @Component({
   selector: 'page-basket',
   imports: [PageHeader, BasketPanelWidget],
-  template: `
-    <section class="app-page">
-      <ui-page-header title="Корзина" />
-      <widget-basket-panel />
-    </section>
-  `,
+  templateUrl: './basket-page.html',
+  styleUrl: './basket-page.scss',
 })
 export class BasketPage {
   constructor() {

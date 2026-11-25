@@ -1,0 +1,10 @@
+<section class="app-page">
+  <ui-page-header title="Подтверждение заказа" />
+  <widget-checkout-summary
+    [basket]="basket.basket()"
+    [contacts]="contacts()"
+    [(selectedId)]="selectedId"
+  />
+  <feature-contact-form (saved)="reloadContacts()" />
+  <feature-place-order [orderId]="basket.basket()?.id ?? null" [contactId]="selectedId()" />
+</section>

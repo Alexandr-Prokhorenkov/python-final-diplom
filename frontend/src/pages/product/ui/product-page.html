@@ -1,0 +1,7 @@
+<section class="app-page">
+  <ui-page-header title="Предложение" />
+  @if (item(); as product) {
+    <entity-product-info-details [item]="product" />
+    <feature-add-to-basket [productInfoId]="product.id" [max]="product.quantity" />
+  }
+</section>

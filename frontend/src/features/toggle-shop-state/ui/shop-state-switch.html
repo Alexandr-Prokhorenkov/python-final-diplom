@@ -1,0 +1,4 @@
+<div class="app-row">
+  <p-toggleswitch [ngModel]="state()" (ngModelChange)="change($event)" [disabled]="loading()" />
+  <span>{{ state() ? 'Витрина включена' : 'Витрина выключена' }}</span>
+</div>

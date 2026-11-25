@@ -12,41 +12,8 @@ import { EmptyState, PageHeader } from '@shared/ui';
 @Component({
   selector: 'page-contacts',
   imports: [PageHeader, TableModule, Button, Dialog, ContactForm, EmptyState],
-  template: `
-    <section class="app-page">
-      <ui-page-header title="Адреса доставки" />
-      <p-button label="Новый адрес" icon="pi pi-plus" (onClick)="open(null)" />
-      @if (!contacts().length) {
-        <ui-empty-state text="Адресов нет. Можно сохранить не больше пяти." />
-      } @else {
-        <p-table [value]="contacts()">
-          <ng-template #header>
-            <tr>
-              <th>Адрес</th>
-              <th></th>
-            </tr>
-          </ng-template>
-          <ng-template #body let-contact>
-            <tr>
-              <td>{{ format(contact) }}</td>
-              <td class="app-row">
-                <p-button icon="pi pi-pencil" [text]="true" (onClick)="open(contact)" />
-                <p-button icon="pi pi-trash" severity="danger" [text]="true" (onClick)="remove(contact)" />
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      }
-      <p-dialog
-        [(visible)]="dialog"
-        [header]="editing() ? 'Изменить адрес' : 'Новый адрес'"
-        [modal]="true"
-        [style]="{ width: '28rem' }"
-      >
-        <feature-contact-form [contact]="editing()" (saved)="onSaved()" />
-      </p-dialog>
-    </section>
-  `,
+  templateUrl: './contacts-page.html',
+  styleUrl: './contacts-page.scss',
 })
 export class ContactsPage {
   private readonly api = inject(ContactApi);

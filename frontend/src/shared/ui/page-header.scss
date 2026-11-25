@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--p-text-muted-color, #64748b);
+}

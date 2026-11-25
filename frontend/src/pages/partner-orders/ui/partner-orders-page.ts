@@ -12,43 +12,8 @@ import { EmptyState, PageHeader } from '@shared/ui';
 @Component({
   selector: 'page-partner-orders',
   imports: [PageHeader, TableModule, Tag, OrderStatusSelect, DatePipe, EmptyState],
-  template: `
-    <section class="app-page">
-      <ui-page-header title="Заказы магазина" />
-      @if (!orders().length) {
-        <ui-empty-state text="Заказов с вашими товарами нет" />
-      } @else {
-        <p-table [value]="orders()">
-          <ng-template #header>
-            <tr>
-              <th>№</th>
-              <th>Дата</th>
-              <th>Сумма</th>
-              <th>Статус</th>
-              <th>Сменить</th>
-            </tr>
-          </ng-template>
-          <ng-template #body let-order>
-            <tr>
-              <td>{{ order.id }}</td>
-              <td>{{ order.dt | date: 'dd.MM.yyyy HH:mm' }}</td>
-              <td>{{ money(order.total_sum) }}</td>
-              <td>
-                <p-tag [value]="label(order.state)" [severity]="severity(order.state)" />
-              </td>
-              <td>
-                <feature-order-status-select
-                  [orderId]="order.id"
-                  [state]="order.state"
-                  (changed)="onChanged(order.id, $event)"
-                />
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      }
-    </section>
-  `,
+  templateUrl: './partner-orders-page.html',
+  styleUrl: './partner-orders-page.scss',
 })
 export class PartnerOrdersPage {
   private readonly api = inject(OrderApi);

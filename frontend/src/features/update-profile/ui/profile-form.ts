@@ -14,25 +14,8 @@ import { UpdateProfileApi } from '../api/update-profile.api';
 @Component({
   selector: 'feature-profile-form',
   imports: [FormsModule, Button, InputText, Password, Message],
-  template: `
-    <form class="app-form" (ngSubmit)="submit()">
-      @if (error()) {
-        <p-message severity="error" [text]="error()!" />
-      }
-      @if (info()) {
-        <p-message severity="success" [text]="info()!" />
-      }
-      <label>Имя <input pInputText name="first_name" [(ngModel)]="firstName" /></label>
-      <label>Фамилия <input pInputText name="last_name" [(ngModel)]="lastName" /></label>
-      <label>Компания <input pInputText name="company" [(ngModel)]="company" /></label>
-      <label>Должность <input pInputText name="position" [(ngModel)]="position" /></label>
-      <label>
-        Новый пароль (необязательно)
-        <p-password [(ngModel)]="password" name="password" [toggleMask]="true" [feedback]="false" />
-      </label>
-      <p-button type="submit" label="Сохранить" [loading]="loading()" />
-    </form>
-  `,
+  templateUrl: './profile-form.html',
+  styleUrl: './profile-form.scss',
 })
 export class ProfileForm {
   private readonly api = inject(UpdateProfileApi);

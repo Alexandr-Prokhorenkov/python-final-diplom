@@ -1,0 +1,30 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.qty {
+  width: 100%;
+  min-width: 0;
+}
+
+:host ::ng-deep {
+  .qty .p-inputnumber,
+  .qty .p-inputnumber-input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .cart-btn {
+    width: 100%;
+  }
+}

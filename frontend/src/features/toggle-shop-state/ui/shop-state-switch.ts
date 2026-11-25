@@ -11,12 +11,8 @@ import { ToggleShopStateApi } from '../api/toggle-shop-state.api';
 @Component({
   selector: 'feature-shop-state-switch',
   imports: [FormsModule, ToggleSwitch],
-  template: `
-    <div class="app-row">
-      <p-toggleswitch [ngModel]="state()" (ngModelChange)="change($event)" [disabled]="loading()" />
-      <span>{{ state() ? 'Витрина включена' : 'Витрина выключена' }}</span>
-    </div>
-  `,
+  templateUrl: './shop-state-switch.html',
+  styleUrl: './shop-state-switch.scss',
 })
 export class ShopStateSwitch {
   private readonly api = inject(ToggleShopStateApi);

@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+:host ::ng-deep {
+  .p-inputtext,
+  .p-textarea,
+  input,
+  textarea {
+    width: 100%;
+  }
+}

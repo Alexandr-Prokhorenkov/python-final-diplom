@@ -8,12 +8,8 @@ import { PartnerToolbarWidget } from '@widgets/partner-toolbar';
 @Component({
   selector: 'page-partner-dashboard',
   imports: [PageHeader, PartnerToolbarWidget],
-  template: `
-    <section class="app-page">
-      <ui-page-header title="Кабинет магазина" subtitle="Витрина, импорт и экспорт прайса" />
-      <widget-partner-toolbar [shop]="shop()" (stateChanged)="onState($event)" />
-    </section>
-  `,
+  templateUrl: './partner-dashboard-page.html',
+  styleUrl: './partner-dashboard-page.scss',
 })
 export class PartnerDashboardPage {
   private readonly api = inject(ShopApi);

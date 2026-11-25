@@ -4,6 +4,7 @@ import { Toast } from 'primeng/toast';
 @Component({
   selector: 'ui-toast-host',
   imports: [Toast],
-  template: `<p-toast position="top-right" />`,
+  templateUrl: './toast-host.html',
+  styleUrl: './toast-host.scss',
 })
 export class ToastHost {}

@@ -1,0 +1,8 @@
+<section class="app-page">
+  <ui-page-header
+    title="Каталог предложений"
+    subtitle="Товары нескольких магазинов в одном списке"
+  />
+  <widget-product-filters (changed)="load($event)" />
+  <widget-product-grid [items]="items()" />
+</section>

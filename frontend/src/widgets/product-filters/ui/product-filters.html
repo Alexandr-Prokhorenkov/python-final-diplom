@@ -1,0 +1,27 @@
+<div class="app-toolbar">
+  <label>
+    Магазин
+    <p-select
+      [options]="shops()"
+      optionLabel="name"
+      optionValue="id"
+      [(ngModel)]="shopId"
+      placeholder="Все магазины"
+      [showClear]="true"
+      appendTo="body"
+    />
+  </label>
+  <label>
+    Категория
+    <p-select
+      [options]="categories()"
+      optionLabel="name"
+      optionValue="id"
+      [(ngModel)]="categoryId"
+      placeholder="Все категории"
+      [showClear]="true"
+      appendTo="body"
+    />
+  </label>
+  <p-button label="Применить" (onClick)="apply()" />
+</div>

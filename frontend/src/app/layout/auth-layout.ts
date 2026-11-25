@@ -6,13 +6,7 @@ import { ToastHost } from '@shared/ui';
 @Component({
   selector: 'app-auth-layout',
   imports: [RouterOutlet, ToastHost],
-  template: `
-    <div class="app-auth">
-      <div class="app-auth__card">
-        <router-outlet />
-      </div>
-      <ui-toast-host />
-    </div>
-  `,
+  templateUrl: './auth-layout.html',
+  styleUrl: './auth-layout.scss',
 })
 export class AuthLayout {}

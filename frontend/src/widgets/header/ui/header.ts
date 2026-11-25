@@ -12,27 +12,8 @@ import { paths } from '@shared/routes';
 @Component({
   selector: 'widget-header',
   imports: [Menubar, Badge, RouterLink, LogoutButton],
-  template: `
-    <p-menubar [model]="items()">
-      <ng-template #start>
-        <a [routerLink]="paths.catalog" style="text-decoration:none;font-weight:700">Заказы</a>
-      </ng-template>
-      <ng-template #end>
-        <div class="app-row">
-          @if (session.isBuyer()) {
-            <a [routerLink]="paths.basket" class="app-row" style="text-decoration:none">
-              <i class="pi pi-shopping-cart"></i>
-              <p-badge [value]="basket.itemCount()" />
-            </a>
-          }
-          @if (session.isAuthenticated()) {
-            <span>{{ session.displayName() }}</span>
-            <feature-logout-button />
-          }
-        </div>
-      </ng-template>
-    </p-menubar>
-  `,
+  templateUrl: './header.html',
+  styleUrl: './header.scss',
 })
 export class HeaderWidget {
   readonly session = inject(SessionStore);

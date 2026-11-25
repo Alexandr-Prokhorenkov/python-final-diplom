@@ -11,18 +11,8 @@ import { CheckoutSummaryWidget } from '@widgets/checkout-summary';
 @Component({
   selector: 'page-checkout',
   imports: [PageHeader, CheckoutSummaryWidget, ContactForm, PlaceOrderButton],
-  template: `
-    <section class="app-page">
-      <ui-page-header title="Подтверждение заказа" />
-      <widget-checkout-summary
-        [basket]="basket.basket()"
-        [contacts]="contacts()"
-        [(selectedId)]="selectedId"
-      />
-      <feature-contact-form (saved)="reloadContacts()" />
-      <feature-place-order [orderId]="basket.basket()?.id ?? null" [contactId]="selectedId()" />
-    </section>
-  `,
+  templateUrl: './checkout-page.html',
+  styleUrl: './checkout-page.scss',
 })
 export class CheckoutPage {
   readonly basket = inject(BasketStore);

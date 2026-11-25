@@ -12,18 +12,8 @@ import { PlaceOrderApi } from '../api/place-order.api';
 @Component({
   selector: 'feature-place-order',
   imports: [Button],
-  template: `
-    <p-button
-      label="Подтвердить заказ"
-      icon="pi pi-check"
-      [disabled]="!contactId() || !orderId()"
-      [loading]="loading()"
-      (onClick)="submit()"
-    />
-    @if (error()) {
-      <small style="color:var(--p-red-500)">{{ error() }}</small>
-    }
-  `,
+  templateUrl: './place-order-button.html',
+  styleUrl: './place-order-button.scss',
 })
 export class PlaceOrderButton {
   private readonly api = inject(PlaceOrderApi);

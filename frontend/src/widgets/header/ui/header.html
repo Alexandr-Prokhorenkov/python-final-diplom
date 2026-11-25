@@ -1,0 +1,19 @@
+<p-menubar [model]="items()">
+  <ng-template #start>
+    <a class="brand" [routerLink]="paths.catalog">Заказы</a>
+  </ng-template>
+  <ng-template #end>
+    <div class="app-row">
+      @if (session.isBuyer()) {
+        <a class="app-row cart-link" [routerLink]="paths.basket">
+          <i class="pi pi-shopping-cart"></i>
+          <p-badge [value]="basket.itemCount()" />
+        </a>
+      }
+      @if (session.isAuthenticated()) {
+        <span>{{ session.displayName() }}</span>
+        <feature-logout-button />
+      }
+    </div>
+  </ng-template>
+</p-menubar>

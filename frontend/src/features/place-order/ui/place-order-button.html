@@ -1,0 +1,10 @@
+<p-button
+  label="Подтвердить заказ"
+  icon="pi pi-check"
+  [disabled]="!contactId() || !orderId()"
+  [loading]="loading()"
+  (onClick)="submit()"
+/>
+@if (error()) {
+  <small class="error">{{ error() }}</small>
+}

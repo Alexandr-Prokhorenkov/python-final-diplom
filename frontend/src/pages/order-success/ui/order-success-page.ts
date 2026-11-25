@@ -14,24 +14,8 @@ import { PageHeader } from '@shared/ui';
 @Component({
   selector: 'page-order-success',
   imports: [PageHeader, Card, Tag, Button, RouterLink, DatePipe],
-  template: `
-    <section class="app-page">
-      <ui-page-header title="Спасибо за заказ" subtitle="Номер заказа сохранён в истории" />
-      @if (order(); as current) {
-        <p-card [header]="'Заказ №' + current.id">
-          <div class="app-stack">
-            <div>{{ current.dt | date: 'dd.MM.yyyy HH:mm' }}</div>
-            <p-tag [value]="label(current.state)" [severity]="severity(current.state)" />
-            <div>Сумма: {{ money(current.total_sum) }}</div>
-            @if (current.contact) {
-              <div>{{ current.contact.city }}, {{ current.contact.street }} {{ current.contact.house }}</div>
-            }
-            <p-button label="К списку заказов" [routerLink]="paths.orders" />
-          </div>
-        </p-card>
-      }
-    </section>
-  `,
+  templateUrl: './order-success-page.html',
+  styleUrl: './order-success-page.scss',
 })
 export class OrderSuccessPage {
   private readonly api = inject(OrderApi);

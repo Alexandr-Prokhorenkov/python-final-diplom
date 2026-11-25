@@ -6,10 +6,7 @@ import { LoginForm } from '@features/auth-login';
 @Component({
   selector: 'page-login',
   imports: [Card, LoginForm],
-  template: `
-    <p-card header="Вход">
-      <feature-login-form />
-    </p-card>
-  `,
+  templateUrl: './login-page.html',
+  styleUrl: './login-page.scss',
 })
 export class LoginPage {}

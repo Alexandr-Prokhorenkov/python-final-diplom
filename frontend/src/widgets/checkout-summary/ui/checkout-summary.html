@@ -1,0 +1,30 @@
+<div class="app-stack">
+  <p-card header="Заказ">
+    @if (basket(); as order) {
+      <ul>
+        @for (item of order.ordered_items; track item.id) {
+          <li>
+            {{ item.product_info.product.name }} / {{ item.product_info.shop.name }} —
+            {{ item.quantity }} × {{ money(item.price) }}
+          </li>
+        }
+      </ul>
+      <strong>Итого: {{ money(order.total_sum) }}</strong>
+    }
+  </p-card>
+  <p-card header="Адрес доставки">
+    @if (!contacts().length) {
+      <p>Добавьте адрес ниже.</p>
+    } @else {
+      <p-select
+        [options]="contactOptions()"
+        optionLabel="label"
+        optionValue="id"
+        [(ngModel)]="selectedId"
+        placeholder="Выберите адрес"
+        appendTo="body"
+        styleClass="w-full"
+      />
+    }
+  </p-card>
+</div>

@@ -6,10 +6,7 @@ import { RegisterForm } from '@features/auth-register';
 @Component({
   selector: 'page-register',
   imports: [Card, RegisterForm],
-  template: `
-    <p-card header="Регистрация покупателя">
-      <feature-register-form />
-    </p-card>
-  `,
+  templateUrl: './register-page.html',
+  styleUrl: './register-page.scss',
 })
 export class RegisterPage {}

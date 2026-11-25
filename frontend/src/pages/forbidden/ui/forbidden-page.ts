@@ -6,11 +6,7 @@ import { PageHeader } from '@shared/ui';
 @Component({
   selector: 'page-forbidden',
   imports: [PageHeader, Message],
-  template: `
-    <section class="app-page">
-      <ui-page-header title="Нет доступа" />
-      <p-message severity="warn" text="Этот раздел предназначен для другой роли." />
-    </section>
-  `,
+  templateUrl: './forbidden-page.html',
+  styleUrl: './forbidden-page.scss',
 })
 export class ForbiddenPage {}

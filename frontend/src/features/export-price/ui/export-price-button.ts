@@ -10,15 +10,8 @@ import { ExportPriceApi } from '../api/export-price.api';
 @Component({
   selector: 'feature-export-price',
   imports: [Button],
-  template: `
-    <p-button
-      label="Скачать YAML"
-      icon="pi pi-download"
-      severity="secondary"
-      [loading]="loading()"
-      (onClick)="exportYaml()"
-    />
-  `,
+  templateUrl: './export-price-button.html',
+  styleUrl: './export-price-button.scss',
 })
 export class ExportPriceButton {
   private readonly api = inject(ExportPriceApi);

@@ -1,0 +1,7 @@
+<p-inputNumber
+  [ngModel]="quantity()"
+  (ngModelChange)="change($event)"
+  [min]="1"
+  [showButtons]="true"
+  [disabled]="loading()"
+/>

@@ -11,16 +11,8 @@ import { RemoveBasketItemApi } from '../api/remove-basket-item.api';
 @Component({
   selector: 'feature-remove-basket-item',
   imports: [Button],
-  template: `
-    <p-button
-      icon="pi pi-trash"
-      severity="danger"
-      [rounded]="true"
-      [text]="true"
-      [loading]="loading()"
-      (onClick)="confirm()"
-    />
-  `,
+  templateUrl: './remove-basket-item.html',
+  styleUrl: './remove-basket-item.scss',
 })
 export class RemoveBasketItem {
   private readonly api = inject(RemoveBasketItemApi);

@@ -4,9 +4,8 @@ import { Message } from 'primeng/message';
 @Component({
   selector: 'ui-empty-state',
   imports: [Message],
-  template: `
-    <p-message severity="info" [text]="text()" />
-  `,
+  templateUrl: './empty-state.html',
+  styleUrl: './empty-state.scss',
 })
 export class EmptyState {
   readonly text = input('Ничего не найдено');

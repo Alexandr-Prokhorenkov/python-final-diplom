@@ -4,6 +4,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 @Component({
   selector: 'ui-confirm-host',
   imports: [ConfirmDialog],
-  template: `<p-confirmdialog />`,
+  templateUrl: './confirm-host.html',
+  styleUrl: './confirm-host.scss',
 })
 export class ConfirmHost {}

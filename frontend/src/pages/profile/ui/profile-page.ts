@@ -6,11 +6,7 @@ import { PageHeader } from '@shared/ui';
 @Component({
   selector: 'page-profile',
   imports: [PageHeader, ProfileForm],
-  template: `
-    <section class="app-page">
-      <ui-page-header title="Профиль" />
-      <feature-profile-form />
-    </section>
-  `,
+  templateUrl: './profile-page.html',
+  styleUrl: './profile-page.scss',
 })
 export class ProfilePage {}

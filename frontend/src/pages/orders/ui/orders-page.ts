@@ -13,37 +13,8 @@ import { EmptyState, PageHeader } from '@shared/ui';
 @Component({
   selector: 'page-orders',
   imports: [PageHeader, TableModule, Tag, RouterLink, DatePipe, EmptyState],
-  template: `
-    <section class="app-page">
-      <ui-page-header title="Мои заказы" />
-      @if (!orders().length) {
-        <ui-empty-state text="Заказов пока нет" />
-      } @else {
-        <p-table [value]="orders()">
-          <ng-template #header>
-            <tr>
-              <th>№</th>
-              <th>Дата</th>
-              <th>Сумма</th>
-              <th>Статус</th>
-            </tr>
-          </ng-template>
-          <ng-template #body let-order>
-            <tr>
-              <td>
-                <a [routerLink]="paths.order(order.id)">{{ order.id }}</a>
-              </td>
-              <td>{{ order.dt | date: 'dd.MM.yyyy HH:mm' }}</td>
-              <td>{{ money(order.total_sum) }}</td>
-              <td>
-                <p-tag [value]="label(order.state)" [severity]="severity(order.state)" />
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      }
-    </section>
-  `,
+  templateUrl: './orders-page.html',
+  styleUrl: './orders-page.scss',
 })
 export class OrdersPage {
   private readonly api = inject(OrderApi);

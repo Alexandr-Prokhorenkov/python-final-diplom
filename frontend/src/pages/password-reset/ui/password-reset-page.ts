@@ -6,10 +6,7 @@ import { PasswordResetForm } from '@features/auth-password-reset';
 @Component({
   selector: 'page-password-reset',
   imports: [Card, PasswordResetForm],
-  template: `
-    <p-card header="Сброс пароля">
-      <feature-password-reset-form />
-    </p-card>
-  `,
+  templateUrl: './password-reset-page.html',
+  styleUrl: './password-reset-page.scss',
 })
 export class PasswordResetPage {}

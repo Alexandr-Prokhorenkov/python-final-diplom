@@ -11,35 +11,8 @@ import { Shop, ShopApi } from '@entities/shop';
 @Component({
   selector: 'widget-product-filters',
   imports: [FormsModule, Select, Button],
-  template: `
-    <div class="app-toolbar">
-      <label>
-        Магазин
-        <p-select
-          [options]="shops()"
-          optionLabel="name"
-          optionValue="id"
-          [(ngModel)]="shopId"
-          placeholder="Все магазины"
-          [showClear]="true"
-          appendTo="body"
-        />
-      </label>
-      <label>
-        Категория
-        <p-select
-          [options]="categories()"
-          optionLabel="name"
-          optionValue="id"
-          [(ngModel)]="categoryId"
-          placeholder="Все категории"
-          [showClear]="true"
-          appendTo="body"
-        />
-      </label>
-      <p-button label="Применить" (onClick)="apply()" />
-    </div>
-  `,
+  templateUrl: './product-filters.html',
+  styleUrl: './product-filters.scss',
 })
 export class ProductFiltersWidget implements OnInit {
   private readonly shopsApi = inject(ShopApi);

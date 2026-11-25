@@ -16,24 +16,8 @@ import { LoginApi } from '../api/login.api';
 @Component({
   selector: 'feature-login-form',
   imports: [FormsModule, Button, InputText, Password, Message, RouterLink],
-  template: `
-    <form class="app-form" (ngSubmit)="submit()">
-      @if (error()) {
-        <p-message severity="error" [text]="error()!" />
-      }
-      <label>
-        Email
-        <input pInputText name="email" [(ngModel)]="email" type="email" required />
-      </label>
-      <label>
-        Пароль
-        <p-password [(ngModel)]="password" name="password" [feedback]="false" [toggleMask]="true" />
-      </label>
-      <p-button type="submit" label="Войти" [loading]="loading()" />
-      <a [routerLink]="paths.register">Нет аккаунта? Регистрация</a>
-      <a [routerLink]="paths.passwordReset">Забыли пароль</a>
-    </form>
-  `,
+  templateUrl: './login-form.html',
+  styleUrl: './login-form.scss',
 })
 export class LoginForm {
   private readonly api = inject(LoginApi);

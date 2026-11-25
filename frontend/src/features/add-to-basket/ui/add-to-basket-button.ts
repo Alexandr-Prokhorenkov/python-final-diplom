@@ -16,18 +16,8 @@ import { AddToBasketApi } from '../api/add-to-basket.api';
 @Component({
   selector: 'feature-add-to-basket',
   imports: [FormsModule, Button, InputNumber],
-  template: `
-    <div class="app-row">
-      <p-inputNumber [(ngModel)]="quantity" [min]="1" [max]="max()" [showButtons]="true" />
-      <p-button
-        label="В корзину"
-        icon="pi pi-shopping-cart"
-        [loading]="loading()"
-        [disabled]="max() < 1"
-        (onClick)="add()"
-      />
-    </div>
-  `,
+  templateUrl: './add-to-basket-button.html',
+  styleUrl: './add-to-basket-button.scss',
 })
 export class AddToBasketButton {
   private readonly api = inject(AddToBasketApi);

@@ -12,17 +12,8 @@ import { ChangeOrderStatusApi } from '../api/change-order-status.api';
 @Component({
   selector: 'feature-order-status-select',
   imports: [FormsModule, Select],
-  template: `
-    <p-select
-      [options]="options"
-      optionLabel="label"
-      optionValue="value"
-      [ngModel]="state()"
-      (ngModelChange)="change($event)"
-      [disabled]="loading()"
-      appendTo="body"
-    />
-  `,
+  templateUrl: './order-status-select.html',
+  styleUrl: './order-status-select.scss',
 })
 export class OrderStatusSelect {
   private readonly api = inject(ChangeOrderStatusApi);

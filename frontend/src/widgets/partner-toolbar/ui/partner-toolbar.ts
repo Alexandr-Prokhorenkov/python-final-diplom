@@ -9,19 +9,8 @@ import { ShopStateSwitch } from '@features/toggle-shop-state';
 @Component({
   selector: 'widget-partner-toolbar',
   imports: [Card, ShopStateSwitch, ImportPriceUrlForm, ExportPriceButton],
-  template: `
-    <div class="app-stack">
-      <p-card header="Витрина">
-        <feature-shop-state-switch [state]="shop()?.state ?? true" (changed)="stateChanged.emit($event)" />
-      </p-card>
-      <p-card header="Импорт прайса">
-        <feature-import-price-url />
-      </p-card>
-      <p-card header="Экспорт">
-        <feature-export-price />
-      </p-card>
-    </div>
-  `,
+  templateUrl: './partner-toolbar.html',
+  styleUrl: './partner-toolbar.scss',
 })
 export class PartnerToolbarWidget {
   readonly shop = input<Shop | null>(null);

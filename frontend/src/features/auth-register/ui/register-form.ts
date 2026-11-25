@@ -15,22 +15,8 @@ import { RegisterApi } from '../api/register.api';
 @Component({
   selector: 'feature-register-form',
   imports: [FormsModule, Button, InputText, Password, Message, RouterLink],
-  template: `
-    <form class="app-form" (ngSubmit)="submit()">
-      @if (error()) {
-        <p-message severity="error" [text]="error()!" />
-      }
-      <label>Имя <input pInputText name="first_name" [(ngModel)]="firstName" required /></label>
-      <label>Фамилия <input pInputText name="last_name" [(ngModel)]="lastName" required /></label>
-      <label>Email <input pInputText name="email" [(ngModel)]="email" type="email" required /></label>
-      <label>
-        Пароль
-        <p-password [(ngModel)]="password" name="password" [toggleMask]="true" />
-      </label>
-      <p-button type="submit" label="Зарегистрироваться" [loading]="loading()" />
-      <a [routerLink]="paths.login">Уже есть аккаунт</a>
-    </form>
-  `,
+  templateUrl: './register-form.html',
+  styleUrl: './register-form.scss',
 })
 export class RegisterForm {
   private readonly api = inject(RegisterApi);

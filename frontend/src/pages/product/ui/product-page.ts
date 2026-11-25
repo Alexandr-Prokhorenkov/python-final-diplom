@@ -9,15 +9,8 @@ import { PageHeader } from '@shared/ui';
 @Component({
   selector: 'page-product',
   imports: [PageHeader, ProductInfoDetails, AddToBasketButton],
-  template: `
-    <section class="app-page">
-      <ui-page-header title="Предложение" />
-      @if (item(); as product) {
-        <entity-product-info-details [item]="product" />
-        <feature-add-to-basket [productInfoId]="product.id" [max]="product.quantity" />
-      }
-    </section>
-  `,
+  templateUrl: './product-page.html',
+  styleUrl: './product-page.scss',
 })
 export class ProductPage {
   private readonly api = inject(ProductInfoApi);

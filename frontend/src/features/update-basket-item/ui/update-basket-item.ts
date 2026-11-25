@@ -12,15 +12,8 @@ import { UpdateBasketItemApi } from '../api/update-basket-item.api';
 @Component({
   selector: 'feature-update-basket-item',
   imports: [FormsModule, InputNumber],
-  template: `
-    <p-inputNumber
-      [ngModel]="quantity()"
-      (ngModelChange)="change($event)"
-      [min]="1"
-      [showButtons]="true"
-      [disabled]="loading()"
-    />
-  `,
+  templateUrl: './update-basket-item.html',
+  styleUrl: './update-basket-item.scss',
 })
 export class UpdateBasketItem {
   private readonly api = inject(UpdateBasketItemApi);

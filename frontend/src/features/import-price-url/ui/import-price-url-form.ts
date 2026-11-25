@@ -12,21 +12,8 @@ import { ImportPriceUrlApi } from '../api/import-price-url.api';
 @Component({
   selector: 'feature-import-price-url',
   imports: [FormsModule, Button, InputText, Message],
-  template: `
-    <form class="app-form" (ngSubmit)="submit()">
-      @if (error()) {
-        <p-message severity="error" [text]="error()!" />
-      }
-      @if (info()) {
-        <p-message severity="success" [text]="info()!" />
-      }
-      <label>
-        URL YAML-прайса
-        <input pInputText name="url" [(ngModel)]="url" placeholder="https://example.com/price.yaml" />
-      </label>
-      <p-button type="submit" label="Импортировать" [loading]="loading()" />
-    </form>
-  `,
+  templateUrl: './import-price-url-form.html',
+  styleUrl: './import-price-url-form.scss',
 })
 export class ImportPriceUrlForm {
   private readonly api = inject(ImportPriceUrlApi);

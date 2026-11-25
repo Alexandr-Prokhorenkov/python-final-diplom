@@ -15,23 +15,8 @@ import { ConfirmApi } from '../api/confirm.api';
 @Component({
   selector: 'feature-confirm-form',
   imports: [FormsModule, Button, InputText, Textarea, Message],
-  template: `
-    <form class="app-form" (ngSubmit)="submit()">
-      @if (error()) {
-        <p-message severity="error" [text]="error()!" />
-      }
-      <p-message
-        severity="info"
-        text="Токен из письма в терминале Django / логах worker. Вставьте его сюда."
-      />
-      <label>Email <input pInputText name="email" [(ngModel)]="email" required /></label>
-      <label>
-        Токен
-        <textarea pTextarea name="token" [(ngModel)]="token" rows="3"></textarea>
-      </label>
-      <p-button type="submit" label="Подтвердить email" [loading]="loading()" />
-    </form>
-  `,
+  templateUrl: './confirm-form.html',
+  styleUrl: './confirm-form.scss',
 })
 export class ConfirmForm implements OnInit {
   private readonly api = inject(ConfirmApi);

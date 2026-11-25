@@ -10,16 +10,8 @@ import { HeaderWidget } from '@widgets/header';
 @Component({
   selector: 'app-shell-layout',
   imports: [RouterOutlet, HeaderWidget, ToastHost, ConfirmHost],
-  template: `
-    <div class="app-shell">
-      <widget-header />
-      <main class="app-shell__body">
-        <router-outlet />
-      </main>
-      <ui-toast-host />
-      <ui-confirm-host />
-    </div>
-  `,
+  templateUrl: './shell-layout.html',
+  styleUrl: './shell-layout.scss',
 })
 export class ShellLayout {
   constructor() {

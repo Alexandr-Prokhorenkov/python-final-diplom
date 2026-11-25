@@ -1,0 +1,19 @@
+<div class="actions">
+  <div class="qty">
+    <p-inputNumber
+      [(ngModel)]="quantity"
+      [min]="1"
+      [max]="max()"
+      [showButtons]="true"
+      [fluid]="true"
+    />
+  </div>
+  <p-button
+    label="В корзину"
+    icon="pi pi-shopping-cart"
+    styleClass="cart-btn"
+    [loading]="loading()"
+    [disabled]="max() < 1"
+    (onClick)="add()"
+  />
+</div>

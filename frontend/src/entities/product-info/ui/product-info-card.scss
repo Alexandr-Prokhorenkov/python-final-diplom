@@ -1,0 +1,26 @@
+:host {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.title-link {
+  text-decoration: none;
+}
+
+.body {
+  min-width: 0;
+}
+
+:host ::ng-deep {
+  .p-card {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .p-card-body,
+  .p-card-content {
+    min-width: 0;
+    overflow: hidden;
+  }
+}

@@ -13,21 +13,8 @@ import { SaveContactApi } from '../api/save-contact.api';
 @Component({
   selector: 'feature-contact-form',
   imports: [FormsModule, Button, InputText, Message],
-  template: `
-    <form class="app-form" (ngSubmit)="submit()">
-      @if (error()) {
-        <p-message severity="error" [text]="error()!" />
-      }
-      <label>Город <input pInputText name="city" [(ngModel)]="city" required /></label>
-      <label>Улица <input pInputText name="street" [(ngModel)]="street" required /></label>
-      <label>Дом <input pInputText name="house" [(ngModel)]="house" /></label>
-      <label>Корпус <input pInputText name="structure" [(ngModel)]="structure" /></label>
-      <label>Строение <input pInputText name="building" [(ngModel)]="building" /></label>
-      <label>Квартира <input pInputText name="apartment" [(ngModel)]="apartment" /></label>
-      <label>Телефон <input pInputText name="phone" [(ngModel)]="phone" required /></label>
-      <p-button type="submit" [label]="contact() ? 'Сохранить' : 'Добавить адрес'" [loading]="loading()" />
-    </form>
-  `,
+  templateUrl: './contact-form.html',
+  styleUrl: './contact-form.scss',
 })
 export class ContactForm {
   private readonly api = inject(SaveContactApi);

@@ -1,0 +1,10 @@
+.app-auth {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.app-auth__card {
+  width: min(420px, 100%);
+}
